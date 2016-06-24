@@ -124,7 +124,7 @@ async function applyRequestMiddleware(app) {
         ]);
       }
     } catch (err) {
-      console.error(err.stack.toString());
+      ctx.error(err.stack.toString());
       if (err instanceof JSONErrors) {
         // if validaition error, its status code is 400
         // its body is json format of error
