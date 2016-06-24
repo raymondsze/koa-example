@@ -1,0 +1,36 @@
+{
+  "server": {
+    "host": "localhost",
+    "port": "3000"
+  },
+  "api": {
+    "secretOrKey": "d9e80364-5c6d-4a69-8298-b35ad8227ae1"
+  },
+  "session": {
+    "secretOrKey": "70f54dd8-1523-4be0-867d-2a2ccccb6501"
+  },
+  "jwt": {
+    "secretOrKey": "70f54dd8-1523-4be0-867d-2a2ccccb6501",
+    "algorithm": "HS256",
+    "issuer": "RSD",
+    "audience": "RSD",
+    "ignoreExpiration": false,
+    "accessToken": {
+      "expiresIn": "14d"
+    }
+  },
+  "database": {
+    "mongodb": {
+      "host": "localhost",
+      "port": 27017,
+      "username": "",
+      "password": "",
+      "db": "test"
+    },
+    "redis": {
+      "host": "localhost",
+      "port": 6379,
+      "db": 1
+    }
+  }
+}
