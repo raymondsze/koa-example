@@ -8,7 +8,7 @@
     "start": "node .",
     "test": "mocha --compilers js:babel-register ./test"
   },
-  "description": "graphql-server",
+  "description": "koa-api-server-boilerplate",
   "dependencies": {
     "aguid": "^1.0.4",
     "babel-core": "^6.9.1",
