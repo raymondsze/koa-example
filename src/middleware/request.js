@@ -35,7 +35,7 @@ class JSONError extends ExtendableError {
     invariant(!meta || _.isObject(meta),
       `meta must be an object but found: ${source}`);
     this.status = status;
-    this.status_code = code || status;
+    this.code = code || status;
     this.title = this.message;
     this.detail = detail || this.title;
     // here source should be a json path
@@ -44,8 +44,8 @@ class JSONError extends ExtendableError {
   }
 
   toJSON() {
-    const { status, status_code, title, detail, source, meta } = this;
-    return { status, status_code, title, detail, source, meta };
+    const { status, code, title, detail, source, meta } = this;
+    return { status, code, title, detail, source, meta };
   }
 }
 
@@ -140,7 +140,7 @@ async function applyRequestMiddleware(app) {
         const { status = 500, message } = err;
         const error = {
           status,
-          status_code: status,
+          code: status,
           title: httpStatus(status),
           detail: message || 'Server encoutered error, please contact system adminstrator.',
         };
