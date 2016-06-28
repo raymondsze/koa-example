@@ -33,6 +33,6 @@ async function applyValidatorMiddleware(app) {
   return app;
 }
 
-applyValidatorMiddleware.priority = 13;
+applyValidatorMiddleware.priority = 14;
 applyValidatorMiddleware.disabled = false;
 export default applyValidatorMiddleware;

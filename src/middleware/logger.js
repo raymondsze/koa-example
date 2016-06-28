@@ -15,7 +15,7 @@ morgan.token('req-id', (req) => (req.id ? req.id : '-'));
 morgan.token('user-id', (req) => ((req.user && req.user.id) ? req.user.id : '-'));
 
 // log levels types
-const types = ['log', 'debug', 'warn', 'error'];
+const types = ['log', 'info', 'debug', 'warn', 'error'];
 
 /**
  * append morgan prefix to the mssage log
@@ -58,6 +58,7 @@ async function applyLoggerMiddleware(app) {
       // here we only use the console util as
       // we already override the console function in winston middleware
       debug: (msg, ...args) => logMsg('debug', ctx, msg, ...args),
+      info: (msg, ...args) => logMsg('info', ctx, msg, ...args),
       log: (msg, ...args) => logMsg('log', ctx, msg, ...args),
       warn: (msg, ...args) => logMsg('warn', ctx, msg, ...args),
       error: (msg, ...args) => logMsg('error', ctx, msg, ...args),
