@@ -1,14 +1,14 @@
 {
   "database": {
     "mongodb": {
-      "host": "localhost",
+      "host": "0.0.0.0",
       "port": 27017,
       "username": "",
       "password": "",
       "db": "test"
     },
     "redis": {
-      "host": "localhost",
+      "host": "0.0.0.0",
       "port": 6379,
       "password": "",
       "db": 1

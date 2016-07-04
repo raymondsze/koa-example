@@ -1,7 +1,7 @@
 {
   "server": {
-    "host": "localhost",
-    "port": "3000"
+    "host": "0.0.0.0",
+    "port": 3000
   },
   "api": {
     "secretOrKey": "d9e80364-5c6d-4a69-8298-b35ad8227ae1"
