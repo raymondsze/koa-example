@@ -72,7 +72,7 @@ In the jsonapi middleware, we will do the following,
   1. checked whether it is application/json  
   2. invalidate if there are keys other than data, meta in body  
   3. route  
-  4. auto append the meta (request_id, request_method, request_url) into res body.  
+  4. auto append the meta (request_id (from x-request-id), request_method, request_url) into res body.  
 
 *: Runtime error will be wrapped as errors: [...], like  
 `errors: [{  
@@ -109,7 +109,7 @@ In the jsonapi middleware, we will do the following,
        `ctx.database.*.client`: @see question 1  
        `ctx.database.*.models`: @see question 1  
   2. Constant  
-       ctx.SERVER_PATH: The server path  
+       `ctx.SERVER_PATH`: The server path  
   3. Session (enable cookies, session with secret)  
   4. BodyParser (multipart, json, url-encoded)  
   5. Helmet  
