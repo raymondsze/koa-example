@@ -5,6 +5,10 @@
 3. <b>JSON request and response standard.</b>  
 4. <b>Logger with winston and morgan standard.</b>  
 
+<h3>Suggested reading for beginner of ES6/7</h3>
+<a href="http://es6.ruanyifeng.com/">http://es6.ruanyifeng.com</a>
+(Please ignore the Symbol parts, as babel cannot mock its features, only MicrosoftEdge support it well)  
+
 <h3>How to start the project</h3>  
 (Please make sure you started mongo and redis, and change the config as you need)
 look at the config folder for reference
