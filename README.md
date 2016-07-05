@@ -143,6 +143,11 @@ Some helper function is added to ctx.
   `ctx.signToken(user)` return { token_type, access_token }  
   `ctx.revokeToken()` return true/false  
   `ctx.token()` return { token_type, access_token }  
+  `ctx.user` return the user object  
+And  
+  `app.ensureAuthenticated()` middleware for checking if logined.  
+  `app.isAuthenticated()` @see passport  
+  `app.isUnauthenticated()` @see passport  
 
 <b>7. What can I play with this project?</b>  
 `
