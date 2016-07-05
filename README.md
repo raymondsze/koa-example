@@ -16,7 +16,7 @@ look at the config folder for reference
 1. npm run test  
 (Now have no test to run)
 
-<b>Questions</b>  
+<h3>Questions</h3>  
 <b>1. How to add database client and models?</b>  
 Please look at <b>src/database/mongo/connect.js</b> and <b>src/database/index.js</b>.
 
