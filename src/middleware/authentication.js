@@ -104,14 +104,14 @@ async function applyAuthMiddleware(app) {
       await redis.expireAsync(session.id, Math.floor(ms(atOpts.expiresIn) / 1000));
       return { token_type: 'JWT', access_token: accessToken };
     },
-    revokeToken: async (ctx) => {
-      const token = ExtractJwt.fromAuthHeader(ctx.req);
+    revokeToken: async function revokeToken() {
+      const token = ExtractJwt.fromAuthHeader(this.req);
       await redis.hsetAsync(token, 'valid', 0);
       return true;
     },
-    token: (ctx) => {
-      const token = ExtractJwt.fromAuthHeader(ctx.req);
-      return { token_type: 'JWT', access_token: token };
+    token: function token() {
+      const _token = ExtractJwt.fromAuthHeader(this.req);
+      return { token_type: 'JWT', access_token: _token };
     },
   });
 }

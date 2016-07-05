@@ -176,7 +176,7 @@ async function userRouter(app) {
 
   // Logout
   router.post('/users/logout', async (ctx) => {
-    await ctx.revokeToken(ctx);
+    await ctx.revokeToken();
   });
 
   app.use(router.routes());
