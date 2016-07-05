@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import Promise from 'bluebird';
 import logger from '../../logger';
 import config from '../../../config';
-import models from './models';
+import User from './models/User';
 
 // switch from MPromise to Bluebird
 mongoose.Promise = Promise;
@@ -46,6 +46,8 @@ export default async (/* app */) => {
   // register mongoose to database
   return {
     client: mongoose,
-    models,
+    models: {
+      User,
+    },
   };
 };

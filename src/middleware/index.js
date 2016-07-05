@@ -1,21 +1,27 @@
-import Promise from 'bluebird';
-import _ from 'lodash';
-import importDirectory from '../lib/importDirectory';
+import applyDatabaseMiddleware from './database';
+import applyConstantMiddleware from './constant';
+import applySessionMiddleware from './session';
+import applyBodyMiddleware from './bodyParser';
+import applyHelmetMiddleware from './helmet';
+import applyValidateMiddleware from './validator';
+import applyRequestIdMiddleware from './requestId';
+import applyLoggerMiddleware from './logger';
+import applyJSONAPIMiddleware from './jsonapi';
+import applyAuthMiddleware from './authentication';
+import applyRoutes from './routes';
 
-// auto read current folders and apply all the middlewares automatically
+// apply middlewares
 export default async (app) => {
-  // sort middlewares by priority, since middlewares could have dependencies
-  let applyMiddlewares = importDirectory(module);
-  // grab index (it mean folder structure) if exists
-  applyMiddlewares = _.map(applyMiddlewares,
-    applyMiddleware => applyMiddleware.index || applyMiddleware);
-  // ignore disabled middleware
-  applyMiddlewares = _.filter(applyMiddlewares,
-    applyMiddleware => _.isFunction(applyMiddleware) && !applyMiddleware.disabled);
-  // sort by priority
-  applyMiddlewares = _.sortBy(applyMiddlewares,
-    applyMiddleware => applyMiddleware.priority);
-  // apply all middleware
-  await Promise.mapSeries(applyMiddlewares, async applyMiddleware => applyMiddleware(app));
+  await applyDatabaseMiddleware(app);
+  await applyConstantMiddleware(app);
+  await applySessionMiddleware(app);
+  await applyBodyMiddleware(app);
+  await applyHelmetMiddleware(app);
+  await applyValidateMiddleware(app);
+  await applyRequestIdMiddleware(app);
+  await applyLoggerMiddleware(app);
+  await applyJSONAPIMiddleware(app);
+  await applyAuthMiddleware(app);
+  await applyRoutes(app);
   return app;
 };

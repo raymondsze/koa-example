@@ -10,6 +10,4 @@ async function applyHelmetMiddleware(app) {
   app.use(helmet());
 }
 
-applyHelmetMiddleware.priority = 13;
-applyHelmetMiddleware.disabled = false;
 export default applyHelmetMiddleware;

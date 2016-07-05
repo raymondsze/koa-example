@@ -10,6 +10,4 @@ async function applyRoutesMiddleware(app) {
   return app;
 }
 
-applyRoutesMiddleware.priority = 31;
-applyRoutesMiddleware.disabled = false;
 export default applyRoutesMiddleware;

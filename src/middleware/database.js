@@ -35,6 +35,4 @@ async function applyDatabaseMiddleware(app) {
   return app;
 }
 
-applyDatabaseMiddleware.priority = 0;
-applyDatabaseMiddleware.disabled = false;
 export default applyDatabaseMiddleware;

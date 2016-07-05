@@ -18,6 +18,4 @@ async function applyBodyParserMiddleware(app) {
   })));
 }
 
-applyBodyParserMiddleware.priority = 12;
-applyBodyParserMiddleware.disabled = false;
 export default applyBodyParserMiddleware;

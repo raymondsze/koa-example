@@ -14,7 +14,8 @@ if (username || password) {
 const uri = `redis://${prefix}${host}:${port}/${db}`;
 
 export default async (/* app */) => {
-  const client = redis.createClient(config.database.redis, {
+  const client = redis.createClient({
+    ...config.database.redis,
     retry_strategy: (options) => {
       if (options.error.code === 'ECONNREFUSED') {
         // End reconnecting on a specific error and flush all commands with a individual error
@@ -29,7 +30,7 @@ export default async (/* app */) => {
         return undefined;
       }
       // reconnect after
-      return Math.max(options.attempt * 100, 5000);
+      return Math.max(options.attempt * 100, 60000);
     },
   });
   client.on('ready', () => {

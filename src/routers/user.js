@@ -101,7 +101,7 @@ async function userRouter(app) {
             code: 1012,
             source: '/data/password',
           }));
-      if (ctx.errors) throw ctx.concatErrors(400, ctx.errors);
+      if (ctx.errors) ctx.throwErrors(400, ctx.errors);
       await next();
     },
     async (ctx) => {
@@ -120,7 +120,7 @@ async function userRouter(app) {
 
       const user = await User.create(data);
       context.status = 201;
-      context.body = { data: user };
+      context.writeBodyData(user);
     });
 
   // Get Users
@@ -133,7 +133,7 @@ async function userRouter(app) {
       .limit(limit)
       .exec();
     context.status = 200;
-    context.body = { data: users };
+    context.writeBodyData(users);
   });
 
   // Get User with id
@@ -144,7 +144,7 @@ async function userRouter(app) {
       throw getUserNotFoundError(ctx, context.params.id);
     }
     context.status = 200;
-    context.body = { data: user };
+    context.writeBodyData(user);
   });
 
   // Login
@@ -168,7 +168,7 @@ async function userRouter(app) {
     if (match) {
       const tokenBody = await ctx.signToken(user);
       context.status = 200;
-      context.body = { data: tokenBody };
+      context.writeBodyData(tokenBody);
     } else {
       throw getUserPasswordIncorrectError(ctx, password);
     }

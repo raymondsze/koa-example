@@ -58,7 +58,6 @@ async function applyAuthMiddleware(app) {
       return ctx.login(user, { session: false })
         .then(next)
         .catch(e => {
-          console.error(e.stack);
           ctx.error(e);
           return next();
         });
@@ -69,10 +68,7 @@ async function applyAuthMiddleware(app) {
   Object.assign(app, {
     ensureAuthenticated: async (ctx, next) => {
       if (ctx.isUnauthenticated()) {
-        throw ctx.constructError({
-          status: 403,
-          detail: 'User is unauthorized to do this action.',
-        });
+        ctx.throwError(401);
       }
       await next();
     },
@@ -120,6 +116,4 @@ async function applyAuthMiddleware(app) {
   });
 }
 
-applyAuthMiddleware.priority = 20;
-applyAuthMiddleware.disabled = false;
 export default applyAuthMiddleware;

@@ -16,6 +16,4 @@ async function applySessionMiddleware(app) {
   return app;
 }
 
-applySessionMiddleware.priority = 11;
-applySessionMiddleware.disabled = false;
 export default applySessionMiddleware;

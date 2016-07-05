@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import invariant from 'invariant';
 import logger from '../logger';
 
+const isDev = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development');
 // customize the morgan middleware
 const format = ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version"' +
   ' :status :res[content-length] ":referrer" ":user-agent"' +
@@ -29,7 +30,8 @@ function logMsg(type, ctx, msg, ...args) {
   invariant(_.indexOf(types, type) !== -1,
     `type must be one of [log, debug, warn, error] but found: ${type}`);
   // obtain the morgan log prefix
-  const prefix = morgan.compile(format)(morgan, ctx.req, ctx.res);
+  let prefix = '';
+  if (!isDev) prefix = morgan.compile(format)(morgan, ctx.req, ctx.res);
   // split by \n and append the morgan log prefix
   // this is to easier for tracking multline message due to async logging
   _.each(msg.split('\n'), m => console[type].apply(console, [`${prefix} ${m}`, ...args]));
@@ -53,20 +55,26 @@ async function applyLoggerMiddleware(app) {
   // add logging utilites to context, ctx.debug, ctx.log, ctx.warn, ctx.error
   // should prevent using console[level] inside later middleware
   // as we need to preserve log style as morgan (apache common)
-  app.use(async (ctx, next) => {
-    Object.assign(ctx, {
-      // here we only use the console util as
-      // we already override the console function in winston middleware
-      debug: (msg, ...args) => logMsg('debug', ctx, msg, ...args),
-      info: (msg, ...args) => logMsg('info', ctx, msg, ...args),
-      log: (msg, ...args) => logMsg('log', ctx, msg, ...args),
-      warn: (msg, ...args) => logMsg('warn', ctx, msg, ...args),
-      error: (msg, ...args) => logMsg('error', ctx, msg, ...args),
-    });
-    await next();
+  Object.assign(app.context, {
+    // here we only use the console util as
+    // we already override the console function in winston middleware
+    debug: function debug(msg, ...args) {
+      return logMsg('debug', this, msg, ...args);
+    },
+    info: function info(msg, ...args) {
+      return logMsg('info', this, msg, ...args);
+    },
+    log: function log(msg, ...args) {
+      return logMsg('log', this, msg, ...args);
+    },
+    warn: function warn(msg, ...args) {
+      return logMsg('warn', this, msg, ...args);
+    },
+    error: function error(msg, ...args) {
+      return logMsg('error', this, msg, ...args);
+    },
   });
+  return app;
 }
 
-applyLoggerMiddleware.priority = 15;
-applyLoggerMiddleware.disabled = false;
 export default applyLoggerMiddleware;

@@ -15,6 +15,4 @@ async function applyRequestIdMiddleware(app) {
   return app;
 }
 
-applyRequestIdMiddleware.priority = 10;
-applyRequestIdMiddleware.disabled = false;
 export default applyRequestIdMiddleware;

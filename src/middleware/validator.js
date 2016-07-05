@@ -20,19 +20,25 @@ async function applyValidatorMiddleware(app) {
   };
   // here will add checkBody, checkQuery, etc utils to ctx
   validate(app);
-  app.use(async (ctx, next) => {
-    const context = ctx;
-    // convert koa-validate to koa2 style
-    context.checkBody = (...args) => app.context.checkBody.apply(context, args);
-    context.checkQuery = (...args) => app.context.checkQuery.apply(context, args);
-    context.checkParams = (...args) => app.context.checkParams.apply(context, args);
-    context.checkFile = (...args) => app.context.checkFile.apply(context, args);
-    context.checkHeader = (...args) => app.context.checkHeader.apply(context, args);
-    await next();
+  const { checkBody, checkQuery, checkParams, checkFile, checkHeader } = app.context;
+  Object.assign(app.context, {
+    checkBody: function ctxCheckBody(...args) {
+      return checkBody.apply(this, args);
+    },
+    checkQuery: function ctxCheckQuery(...args) {
+      return checkQuery.apply(this, args);
+    },
+    checkParams: function ctxCheckParams(...args) {
+      return checkParams.apply(this, args);
+    },
+    checkFile: function ctxCheckFile(...args) {
+      return checkFile.apply(this, args);
+    },
+    checkHeader: function ctxCheckHeader(...args) {
+      return checkHeader.apply(this, args);
+    },
   });
   return app;
 }
 
-applyValidatorMiddleware.priority = 14;
-applyValidatorMiddleware.disabled = false;
 export default applyValidatorMiddleware;

@@ -20,5 +20,4 @@ async function healthRouter(app) {
   app.use(router.routes());
 }
 
-healthRouter.disabled = false;
 export default healthRouter;
