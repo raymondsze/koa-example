@@ -144,10 +144,10 @@ Some helper function is added to ctx.
   `ctx.revokeToken()` return true/false  
   `ctx.token()` return { token_type, access_token }  
   `ctx.user` return the user object  
+  `ctx.isAuthenticated()` @see passport  
+  `ctx.isUnauthenticated()` @see passport 
 And  
-  `app.ensureAuthenticated()` middleware for checking if logined.  
-  `app.isAuthenticated()` @see passport  
-  `app.isUnauthenticated()` @see passport  
+  `app.ensureAuthenticated()` middleware for checking if logined.   
 
 <b>7. What can I play with this project?</b>  
 `
