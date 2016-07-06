@@ -182,5 +182,4 @@ async function userRouter(app) {
   app.use(router.routes());
 }
 
-userRouter.disabled = false;
 export default userRouter;
