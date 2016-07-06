@@ -107,7 +107,12 @@ In the jsonapi middleware, we will do the following,
       shorthand to write data to ctx.body.data.  
     `ctx.writeBodyMeta(meta)`  
       shorthand to write meta to ctx.body.meta.  
-
+    `ctx.data`  
+      shorthand to ctx.body.data  
+    `ctx.meta`  
+      shorthand to ctx.body.meta  
+    `ctx.skipJSONAPI()`
+      this is to skip json middleware effects, normally could be used for proxy call to other server and you want to preserve the response  
 <b>5. What middlewares it provide?</b>
   1. Database  
        `ctx.database.*.client`: @see question 1  
@@ -140,6 +145,9 @@ In the jsonapi middleware, we will do the following,
        `ctx.throwErrors(status, errors)`  
        `ctx.writeBodyData(data)`  
        `ctx.writeBodyMeta(meta)`  
+       `ctx.data`  
+       `ctx.meta`  
+       `ctx.skipJSONAPI()`  
 
 <b>6. Passport Authentication?</b>  
 This project use JWT strategy, and it is a middleware.  
