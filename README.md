@@ -5,6 +5,10 @@
 3. <b>JSON request and response standard.</b>  
 4. <b>Logger with winston and morgan standard.</b>  
 
+<h3>Suggested reading for beginner of ES6/7</h3>
+<a href="http://es6.ruanyifeng.com/">http://es6.ruanyifeng.com</a>
+(Please ignore the Symbol parts, as babel cannot mock its features, only MicrosoftEdge support it well)  
+
 <h3>How to start the project</h3>  
 (Please make sure you started mongo and redis, and change the config as you need)
 look at the config folder for reference
@@ -16,7 +20,7 @@ look at the config folder for reference
 1. npm run test  
 (Now have no test to run)
 
-<b>Questions</b>  
+<h3>Questions</h3>  
 <b>1. How to add database client and models?</b>  
 Please look at <b>src/database/mongo/connect.js</b> and <b>src/database/index.js</b>.
 
@@ -72,7 +76,7 @@ In the jsonapi middleware, we will do the following,
   1. checked whether it is application/json  
   2. invalidate if there are keys other than data, meta in body  
   3. route  
-  4. auto append the meta (request_id, request_method, request_url) into res body.  
+  4. auto append the meta (request_id (from x-request-id), request_method, request_url) into res body.  
 
 *: Runtime error will be wrapped as errors: [...], like  
 `errors: [{  
@@ -109,7 +113,7 @@ In the jsonapi middleware, we will do the following,
        `ctx.database.*.client`: @see question 1  
        `ctx.database.*.models`: @see question 1  
   2. Constant  
-       ctx.SERVER_PATH: The server path  
+       `ctx.SERVER_PATH`: The server path  
   3. Session (enable cookies, session with secret)  
   4. BodyParser (multipart, json, url-encoded)  
   5. Helmet  
@@ -143,6 +147,11 @@ Some helper function is added to ctx.
   `ctx.signToken(user)` return { token_type, access_token }  
   `ctx.revokeToken()` return true/false  
   `ctx.token()` return { token_type, access_token }  
+  `ctx.user` return the user object  
+  `ctx.isAuthenticated()` @see passport  
+  `ctx.isUnauthenticated()` @see passport 
+And  
+  `app.ensureAuthenticated()` middleware for checking if logined.   
 
 <b>7. What can I play with this project?</b>  
 `
