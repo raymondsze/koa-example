@@ -155,7 +155,7 @@ async function applyJSONAPIMiddleware(app) {
           let invalid = false;
           if (!_.isEmpty(body) && _.isPlainObject(body)) {
             const propNames = _.keys(body);
-            invalid = _.find(propNames, name => (name !== 'data' || name !== 'meta'));
+            invalid = _.find(propNames, name => (name !== 'data' && name !== 'meta'));
           }
           // if body is invalid
           if (invalid) {
