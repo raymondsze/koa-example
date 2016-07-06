@@ -27,6 +27,6 @@ export default (async () => {
         }
         console.info(`Server started at http://${host}:${port}`);
       });
-    resolve(server);
+    resolve({ server, koa: app });
   });
 })();
