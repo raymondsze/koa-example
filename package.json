@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "test": "mocha --compilers js:babel-register ./test"
+    "test": "mocha --compilers js:babel-register ./test/index"
   },
   "description": "koa-api-server-boilerplate",
   "dependencies": {
