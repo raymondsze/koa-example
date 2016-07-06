@@ -115,6 +115,11 @@ function getMeta(ctx) {
 async function applyJSONAPIMiddleware(app) {
   // add errors utilities
   Object.assign(app.context, {
+    // call this if you don't want this middleware take effect on your response
+    // should be used for proxy call
+    skipJSONAPI: function skipJSONAPI() {
+      this.__skip__ = true;
+    },
     // get error, could be used if multiple errors
     constructError: function error(props) {
       return new JSONError(props);
@@ -143,30 +148,32 @@ async function applyJSONAPIMiddleware(app) {
   app.use(async (ctx, next) => {
     const context = ctx;
     try {
-      // if content-type is json, the request must have data
-      if (isJSONRequest(ctx)) {
-        const body = ctx.request.body;
-        let invalid = false;
-        if (!_.isEmpty(body) && _.isPlainObject(body)) {
-          const propNames = _.keys(body);
-          invalid = _.find(propNames, name => (name !== 'data' || name !== 'meta'));
-        }
-        // if body is invalid
-        if (invalid) {
-          throw new JSONError({
-            status: 400,
-            detail: 'Only data or meta is allowed in json request body.',
-          });
-        } else {
-          // make easy access to body.data and body.meta
-          context.data = body.data || {};
-          context.meta = body.meta || {};
+      if (!ctx.__skip__) {
+        // if content-type is json, the request must have data
+        if (isJSONRequest(ctx)) {
+          const body = ctx.request.body;
+          let invalid = false;
+          if (!_.isEmpty(body) && _.isPlainObject(body)) {
+            const propNames = _.keys(body);
+            invalid = _.find(propNames, name => (name !== 'data' || name !== 'meta'));
+          }
+          // if body is invalid
+          if (invalid) {
+            throw new JSONError({
+              status: 400,
+              detail: 'Only data or meta is allowed in json request body.',
+            });
+          } else {
+            // make easy access to body.data and body.meta
+            context.data = body.data || {};
+            context.meta = body.meta || {};
+          }
         }
       }
       // wait the route
       await next();
       // status with 400 to 500 is regards as errors
-      if (ctx.status >= 400 && ctx.status <= 599) {
+      if (!ctx.__skip__ && ctx.status >= 400 && ctx.status <= 599) {
         // throw the error to make it go catch block
         const err = new JSONError({
           status: ctx.status,
@@ -176,33 +183,37 @@ async function applyJSONAPIMiddleware(app) {
       }
     } catch (err) {
       ctx.error(err.stack.toString());
-      if (err instanceof JSONErrors) {
-        // if validaition error, its status code is 400
-        // its body is json format of error
-        context.status = err.status;
-        context.body = err.toJSON();
-      } else if (err instanceof JSONError) {
-        // if validaition error, its status code is 400
-        // wrap error to errors
-        context.status = err.status;
-        context.body = new JSONErrors(context.status, [err]).toJSON();
-      } else {
-        // internal server error
-        const { status = 500, message } = err;
-        const error = {
-          status,
-          code: status,
-          detail: message || 'Server encoutered error, please contact system adminstrator.',
-        };
-        context.status = error.status;
-        context.body = { errors: [error] };
+      if (!ctx.__skip__) {
+        if (err instanceof JSONErrors) {
+          // if validaition error, its status code is 400
+          // its body is json format of error
+          context.status = err.status;
+          context.body = err.toJSON();
+        } else if (err instanceof JSONError) {
+          // if validaition error, its status code is 400
+          // wrap error to errors
+          context.status = err.status;
+          context.body = new JSONErrors(context.status, [err]).toJSON();
+        } else {
+          // internal server error
+          const { status = 500, message } = err;
+          const error = {
+            status,
+            code: status,
+            detail: message || 'Server encoutered error, please contact system adminstrator.',
+          };
+          context.status = error.status;
+          context.body = { errors: [error] };
+        }
       }
     } finally {
-      // append meta
-      if (isJSONResponse(ctx)) {
-        context.status = ctx.status;
-        context.body = ctx.body || {};
-        context.body.meta = getMeta(ctx);
+      if (!ctx.__skip__) {
+        // append meta
+        if (isJSONResponse(ctx)) {
+          context.status = ctx.status;
+          context.body = ctx.body || {};
+          context.body.meta = getMeta(ctx);
+        }
       }
     }
   });
