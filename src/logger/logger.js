@@ -4,6 +4,7 @@ import winston from 'winston';
 const Logger = winston.Logger;
 const ConsoleTransport = winston.transports.Console;
 const IS_DEV_MODE = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development');
+const IS_TEST_MODE = (process.env.NODE_ENV === 'test');
 
 const logger = new Logger({
   levels: {
@@ -26,19 +27,19 @@ const logger = new Logger({
       level: 'debug',
       colorize: true,
       prettyPrint: true,
-      timestamp: true,
+      timestamp: !IS_TEST_MODE,
     })] : []),
     // Do not log debug level if environment is not development
     // Remark: info level already include warn and error level
     // No file transport, as there is logging system
     // that captue the console log insteadof files
-    ... (!IS_DEV_MODE ?
+    ... ((!IS_DEV_MODE) ?
     [new ConsoleTransport({
       name: 'info-console',
       level: 'info',
       colorize: true,
       prettyPrint: true,
-      timestamp: true,
+      timestamp: !IS_TEST_MODE,
     })] : []),
   ],
 });

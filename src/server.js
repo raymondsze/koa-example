@@ -2,6 +2,7 @@ import http from 'http';
 import Koa from 'koa';
 import _ from 'lodash';
 import invariant from 'invariant';
+import './logger';
 import applyMiddleware from './middleware';
 import config from '../config';
 
