@@ -6,7 +6,6 @@ import connectRedis from './redis';
 export default async (app) => {
   invariant(_.isFunction(app.connectDatabase),
     'app.connectDatabase must be function, it is required before connecting any database.');
-  // ignore disabled database
   {
     const { client, models } = await connectMongo(app);
     app.connectDatabase('mongo', client, models);

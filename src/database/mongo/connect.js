@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import Promise from 'bluebird';
-import logger from '../../logger';
 import config from '../../../config';
 import User from './models/User';
 
@@ -18,30 +17,29 @@ if (username || password) {
 }
 const uri = `mongodb://${prefix}${host}:${port}/${db}`;
 
+const IS_DEV_MODE = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 // export the connector function
 export default async (/* app */) => {
   // event binding
   connection.on('connecting', () => {
-    logger.info(`connecting to ${uri}...`);
+    console.info(`connecting to ${uri}...`);
   });
   connection.on('error', (error) => {
-    logger.error(`error in connection ${uri}: ${error}`);
+    console.error(`error in connection ${uri}: ${error}`);
   });
   connection.on('connected', () => {
-    logger.info(`${uri} connected!`);
+    console.info(`${uri} connected!`);
   });
   connection.once('open', () => {
-    logger.info(`${uri} connection opened!`);
+    console.info(`${uri} connection opened!`);
   });
   connection.on('reconnected', () => {
-    logger.info(`${uri} reconnected!`);
+    console.info(`${uri} reconnected!`);
   });
   connection.on('disconnected', () => {
-    logger.error(`${uri} disconnected!`);
+    console.error(`${uri} disconnected!`);
   });
-  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    mongoose.set('debug', true);
-  }
+  if (IS_DEV_MODE) mongoose.set('debug', true);
   await mongoose.connect(uri, { server: { auto_reconnect: true } });
   // register mongoose to database
   return {

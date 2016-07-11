@@ -30,7 +30,6 @@ async function applyDatabaseMiddleware(app) {
       return client;
     },
   });
-  // connect all database
   await connectDatabase(app);
   return app;
 }

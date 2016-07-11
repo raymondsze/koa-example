@@ -3,7 +3,8 @@ import winston from 'winston';
 
 const Logger = winston.Logger;
 const ConsoleTransport = winston.transports.Console;
-const isDev = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development');
+const IS_DEV_MODE = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development');
+
 const logger = new Logger({
   levels: {
     error: 0,
@@ -19,7 +20,7 @@ const logger = new Logger({
   },
   transports: [
     // log console if developement
-    ... (isDev ?
+    ... (IS_DEV_MODE ?
     [new ConsoleTransport({
       name: 'debug-console',
       level: 'debug',
@@ -31,7 +32,7 @@ const logger = new Logger({
     // Remark: info level already include warn and error level
     // No file transport, as there is logging system
     // that captue the console log insteadof files
-    ... (!isDev ?
+    ... (!IS_DEV_MODE ?
     [new ConsoleTransport({
       name: 'info-console',
       level: 'info',
@@ -41,11 +42,6 @@ const logger = new Logger({
     })] : []),
   ],
 });
-
-// to be used by morgan
-logger.stream = {
-  write: (message) => logger.info(message),
-};
 
 function formatArgs(...args) {
   return [util.format.apply(util, args)];

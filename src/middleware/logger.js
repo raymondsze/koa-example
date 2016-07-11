@@ -1,9 +1,8 @@
 import _ from 'lodash';
 import morgan from 'morgan';
 import invariant from 'invariant';
-import logger from '../logger';
 
-const isDev = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development');
+const IS_DEV_MODE = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development');
 // customize the morgan middleware
 const format = ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version"' +
   ' :status :res[content-length] ":referrer" ":user-agent"' +
@@ -31,10 +30,9 @@ function logMsg(type, ctx, msg, ...args) {
     `type must be one of [log, debug, warn, error] but found: ${type}`);
   // obtain the morgan log prefix
   let prefix = '';
-  if (!isDev) prefix = morgan.compile(format)(morgan, ctx.req, ctx.res);
-  // split by \n and append the morgan log prefix
+  if (!IS_DEV_MODE) prefix = morgan.compile(format)(morgan, ctx.req, ctx.res);
   // this is to easier for tracking multline message due to async logging
-  _.each(msg.split('\n'), m => console[type].apply(console, [`${prefix} ${m}`, ...args]));
+  _.each(msg, m => console[type].apply(console, [`${prefix} ${m}`, ...args]));
 }
 
 /**
@@ -44,7 +42,7 @@ function logMsg(type, ctx, msg, ...args) {
  */
 async function applyLoggerMiddleware(app) {
   // morgan log request and response with winston logger
-  const fn = morgan('custom', { stream: logger.stream });
+  const fn = morgan('custom', { stream: { write: (message) => console.info(message) } });
   // convert morgan middleware from express to koa style
   app.use(async (ctx, next) =>
     new Promise((resolve, reject) => {

@@ -1,3 +1,4 @@
 require('babel-core/register');
 require('./src/logger');
-require('./src/server');
+const startServer = require('./src/server').default;
+startServer();
