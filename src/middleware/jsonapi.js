@@ -182,7 +182,9 @@ async function applyJSONAPIMiddleware(app) {
         throw err;
       }
     } catch (err) {
-      ctx.error(err.stack.toString());
+      if (ctx.status >= 500 && ctx.status <= 599) {
+        ctx.error(err.stack.toString());
+      }
       if (!ctx.__skip__) {
         if (err instanceof JSONErrors) {
           // if validaition error, its status code is 400

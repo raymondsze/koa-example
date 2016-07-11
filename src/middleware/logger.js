@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import invariant from 'invariant';
 
 const IS_DEV_MODE = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development');
+const IS_TEST_MODE = (process.env.NODE_ENV === 'test');
 // customize the morgan middleware
 const format = ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version"' +
   ' :status :res[content-length] ":referrer" ":user-agent"' +
@@ -41,15 +42,16 @@ function logMsg(type, ctx, msg, ...args) {
  * @return {Koa} app                  - the koa server instance
  */
 async function applyLoggerMiddleware(app) {
-  // morgan log request and response with winston logger
-  const fn = morgan('custom', { stream: { write: (message) => console.info(message) } });
-  // convert morgan middleware from express to koa style
-  app.use(async (ctx, next) =>
-    new Promise((resolve, reject) => {
-      fn(ctx.req, ctx.res, (err) => (err ? reject(err) : resolve(ctx)));
-    }).then(next)
-  );
-
+  if (!IS_TEST_MODE) {
+    // morgan log request and response with winston logger
+    const fn = morgan('custom', { stream: { write: (message) => console.info(message) } });
+    // convert morgan middleware from express to koa style
+    app.use(async (ctx, next) =>
+      new Promise((resolve, reject) => {
+        fn(ctx.req, ctx.res, (err) => (err ? reject(err) : resolve(ctx)));
+      }).then(next)
+    );
+  }
   // add logging utilites to context, ctx.debug, ctx.log, ctx.warn, ctx.error
   // should prevent using console[level] inside later middleware
   // as we need to preserve log style as morgan (apache common)
