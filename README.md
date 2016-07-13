@@ -9,7 +9,7 @@
 <a href="http://es6.ruanyifeng.com/">http://es6.ruanyifeng.com</a>
 (Please ignore the Symbol parts, as babel cannot mock its features, only MicrosoftEdge support it well)  
 
-<h3>Koa2 vs Express</h3>
+<h3>Koa2 vs Koa vs Express</h3>
 Koa2: 
 `
  app.use(async (ctx, next) => {
@@ -24,12 +24,27 @@ Koa2:
    ctx.body = 'OK';
  });
 `
+Koa:  
+`
+ app.use(function* (next) {
+   // here the next is same as express's next
+   // this.request = express's req
+   // this.response = express's res
+   // this.req = node's req
+   // this.res = node's req
+   // this.body= ... = res.send(...) or ctx.response.send(...)
+   // this.status= ... = res.status(...) or ctx.response.status(...)
+   this.status = 200;
+   this.body = 'OK';
+ });
+`
 Express:
 `
  app.use((req, res, next) => {
    res.status(200).send('OK');
  });
 `
+Knowing this, you would be able to switch among Koa2, Koa and Express 's middleware by code modification.
 
 <h3>How to start the project</h3>  
 (Please make sure you started mongo and redis, and change the config as you need)
@@ -193,3 +208,6 @@ POST /users/login  : login user
 POST /users/logout : logout user  
 POST /users        : create user [body: { data: { username, email, password } }]
 `
+
+<h4>TODO</h4>  
+`TODO: add X-User-ID, X-Request-Id, X-Client-Id checking middleware for incoming request`
