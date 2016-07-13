@@ -141,7 +141,7 @@ In the jsonapi middleware, we will do the following,
        `ctx.database.*.models`: @see question 1  
   2. Constant  
        `ctx.SERVER_PATH`: The server path  
-  3. Session (enable cookies, session with secret)  
+  3. Session (enable cookies, session with secret) (`Removed, API server should not take care of session`)  
   4. BodyParser (multipart, json, url-encoded)  
   5. Helmet  
   6. Validate (port koa-validate to koa@2.0)  
