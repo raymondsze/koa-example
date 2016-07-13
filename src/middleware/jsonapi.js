@@ -182,9 +182,6 @@ async function applyJSONAPIMiddleware(app) {
         throw err;
       }
     } catch (err) {
-      if (ctx.status >= 500 && ctx.status <= 599) {
-        ctx.error(err.stack.toString());
-      }
       if (!ctx.__skip__) {
         if (err instanceof JSONErrors) {
           // if validaition error, its status code is 400
@@ -197,6 +194,7 @@ async function applyJSONAPIMiddleware(app) {
           context.status = err.status;
           context.body = new JSONErrors(context.status, [err]).toJSON();
         } else {
+          ctx.error(err.stack.toString());
           // internal server error
           const { status = 500, message } = err;
           const error = {
